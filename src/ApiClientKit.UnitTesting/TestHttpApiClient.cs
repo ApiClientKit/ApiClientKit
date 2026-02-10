@@ -43,7 +43,7 @@ namespace ApiClientKit.UnitTesting
                         {
                             app.Run(async ctx =>
                             {
-                                var serializer = new DefaultJsonSerializer();
+                                var serializer = new DefaultDataSerializer();
                                 await ctx.Response.WriteAsync(serializer.Serialize(Models.Country.Countries));
                             });
                         });
@@ -62,7 +62,7 @@ namespace ApiClientKit.UnitTesting
 
             var httpClient = Host.GetTestClient();
 
-            var service = new CountriesApiService(new HttpApiGateway(httpClient), new DefaultJsonSerializer(), null, null);
+            var service = new CountriesApiService(new HttpApiGateway(httpClient), new DefaultDataSerializer(), null, null);
             var countries = await service.GetCountriesAsync();
 
             // Validations

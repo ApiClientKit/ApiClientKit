@@ -7,7 +7,7 @@ namespace ApiClientKit.Serialization;
 /// <summary>
 /// Defines an interface to be implemented by an Api Serializer
 /// </summary>
-public interface IApiSerializer
+public interface IApiDataSerializer
 {
     /// <summary>
     /// Serializes an object into a string

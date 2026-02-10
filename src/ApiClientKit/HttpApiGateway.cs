@@ -13,7 +13,7 @@ namespace ApiClientKit;
 
 
 /// <summary>
-/// Represents an Gateway that communicates with an API using the <see cref="HttpClient"/> component
+/// Represents a Gateway that communicates with an API using the <see cref="HttpClient"/> component
 /// </summary>
 public sealed class HttpApiGateway: IApiGateway
 {
@@ -30,7 +30,7 @@ public sealed class HttpApiGateway: IApiGateway
 
     /// <inheritdoc/>
     /// <exception cref="ApiException">Thrown if the API returned a unsuccesfull status</exception>
-    public async Task<T?> SendAsync<T>(ApiRequest request, IApiSerializer serializer, IAuthProvider? authProvider, IApiLogger? logger, CancellationToken ct = default)
+    public async Task<T?> SendAsync<T>(ApiRequest request, IApiDataSerializer serializer, IAuthProvider? authProvider, IApiLogger? logger, CancellationToken ct = default)
     {
         // Build the Url for the request
         var url = BuildUrl(request.Path, request.Query);
@@ -43,14 +43,14 @@ public sealed class HttpApiGateway: IApiGateway
             message.Headers.Add(h.Key, h.Value);
 
         // Append Body
-        if (request.Body != null)
+        if (request.Method != HttpMethod.Get && request.Body is not null)
         {
             var json = serializer.Serialize(request.Body);
             message.Content = new StringContent(json, Encoding.UTF8, "application/json");
         }
 
         // Append Authentication Headers
-        if (authProvider != null)
+        if (authProvider is not null)
             await authProvider.ApplyAsync(message);
 
         // Logs Request

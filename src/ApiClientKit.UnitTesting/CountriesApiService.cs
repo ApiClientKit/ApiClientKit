@@ -15,7 +15,7 @@ namespace ApiClientKit.UnitTesting
     {
         public const string DEFAULT_PATH = "countries/europe";
 
-        public CountriesApiService(IApiGateway apiGateway, IApiSerializer serializer, IAuthProvider? authProvider, IApiLogger? apiLogger) : base(apiGateway, serializer, authProvider, apiLogger)
+        public CountriesApiService(IApiGateway apiGateway, IApiDataSerializer serializer, IAuthProvider? authProvider, IApiLogger? apiLogger) : base(apiGateway, serializer, authProvider, apiLogger)
         {
 
         }

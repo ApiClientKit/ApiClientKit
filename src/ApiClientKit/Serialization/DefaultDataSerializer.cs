@@ -7,10 +7,10 @@ using System.Text.Json;
 namespace ApiClientKit.Serialization;
 
 /// <summary>
-/// A class that serializes json contents into objects
+/// A class that serializes json contents into objects and vice-versa
 /// </summary>
 /// <remarks>This class uses the <see cref="System.Text.Json"/> serializer</remarks>
-public sealed class DefaultJsonSerializer: IApiSerializer
+public sealed class DefaultDataSerializer: IApiDataSerializer
 {
     private readonly JsonSerializerOptions _options = new()
     {

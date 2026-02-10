@@ -17,7 +17,7 @@ namespace ApiClientKit.UnitTesting
     internal class StaticApiGateway : IApiGateway
     {
         
-        public async Task<T?> SendAsync<T>(ApiRequest request, IApiSerializer serializer, IAuthProvider? authProvider, IApiLogger? logger, CancellationToken ct = default)
+        public async Task<T?> SendAsync<T>(ApiRequest request, IApiDataSerializer serializer, IAuthProvider? authProvider, IApiLogger? logger, CancellationToken ct = default)
         {
             // If a GET request is done to the "countries" path, it will return the serialized list of countries
             if (request.Method == HttpMethod.Get && string.Equals(request.Path, CountriesApiService.DEFAULT_PATH, StringComparison.OrdinalIgnoreCase))

@@ -27,8 +27,8 @@ public abstract class ApiService
     /// <summary>
     /// The data serializer component
     /// </summary>
-    protected IApiSerializer ApiSerializer => _apiSerializer;
-    private readonly IApiSerializer _apiSerializer;
+    protected IApiDataSerializer ApiSerializer => _apiSerializer;
+    private readonly IApiDataSerializer _apiSerializer;
 
     /// <summary>
     /// The authentication provider
@@ -53,7 +53,7 @@ public abstract class ApiService
     /// <param name="serializer">The data serializer component</param>
     /// <param name="authProvider">The authentication provider</param>
     /// <param name="apiLogger">The API logger</param>
-    protected ApiService(IApiGateway apiGateway, IApiSerializer serializer, IAuthProvider? authProvider, IApiLogger? apiLogger)
+    protected ApiService(IApiGateway apiGateway, IApiDataSerializer serializer, IAuthProvider? authProvider, IApiLogger? apiLogger)
     {
         _apiGateway = apiGateway;
         _apiSerializer = serializer;

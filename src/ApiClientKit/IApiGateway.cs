@@ -26,5 +26,5 @@ public interface IApiGateway
     /// <param name="logger">Reference to the Api Logger</param>
     /// <param name="ct">The cancellation token</param>
     /// <returns>A task that sends a request to the Api</returns>
-    Task<T?> SendAsync<T>(ApiRequest request, IApiSerializer serializer, IAuthProvider? authProvider, IApiLogger? logger, CancellationToken ct = default);
+    Task<T?> SendAsync<T>(ApiRequest request, IApiDataSerializer serializer, IAuthProvider? authProvider, IApiLogger? logger, CancellationToken ct = default);
 }
