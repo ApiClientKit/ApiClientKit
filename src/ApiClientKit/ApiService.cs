@@ -12,7 +12,7 @@ namespace ApiClientKit;
 /// <summary>
 /// Defines the base class for any API Service
 /// </summary>
-public abstract class ApiService
+public abstract class ApiService: IDisposable
 {
     // *************************************
     // Properties
@@ -41,6 +41,7 @@ public abstract class ApiService
     /// </summary>
     protected IApiLogger? ApiLogger => _apiLogger;
     private readonly IApiLogger? _apiLogger;
+    private bool disposedValue;
 
     // *************************************
     // Constructors
@@ -73,4 +74,30 @@ public abstract class ApiService
         return await _apiGateway.SendAsync<T>(request, _apiSerializer, _authProvider, _apiLogger, ct);
     }
 
+    // *************************************
+    // IDisposable Implementation
+    // *************************************
+
+    /// <inheritdoc/>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                // Dispose Gateway if Disposable
+                if (_apiGateway is IDisposable d) d?.Dispose();
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
 }
