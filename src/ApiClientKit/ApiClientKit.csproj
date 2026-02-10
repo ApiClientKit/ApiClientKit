@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>10.0</LangVersion>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+
+		<!-- Library Details -->
+		<RootNamespace>ApiClientKit</RootNamespace>
+		<AssemblyName>ApiClientKit</AssemblyName>
+		<AssemblyTitle>ApiClientKit</AssemblyTitle>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<!-- Nuget Package Info -->
+	<PropertyGroup Label="Nuget Package Info">
+
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageId>ApiClientKit</PackageId>
+
+		<!-- Versioning happens in the CI/CD Pipeline - Keep it as 0.1.0 -->
+		<Version>0.1.0</Version>
+		
+		<Title>ApiClientKit</Title>
+		<Authors>Olavo Henrique Dias</Authors>
+		<Company>Olavo Henrique Dias</Company>
+		<Product>ApiClientKit</Product>
+		<Description>.NET API Client Kit</Description>
+		<Summary>.NET API Client Kit - A library to facilitate the creation of custom clients for APIs</Summary>
+		<Copyright>Copyright © Olavo Henrique Dias 2026</Copyright>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<PackageTags>.NET API Client Kit HttpClient ApiClient ApiClientKit ClientKit</PackageTags>
+
+		<PackageReadmeFile>README.MD</PackageReadmeFile>
+		<PackageIcon>nugetPackageIcon.png</PackageIcon>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<RepositoryUrl>https://github.com/ApiClientKit/ApiClientKit</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/ApiClientKit/ApiClientKit</PackageProjectUrl>
+		<PackageReleaseNotes>The change log is available at https://github.com/ApiClientKit/ApiClientKit/blob/master/CHANGELOG.md</PackageReleaseNotes>
+	</PropertyGroup>
+
+	<!-- Add Special Files to the Output Folder, for the Nuget Package Creation -->
+	<ItemGroup>
+		<None Include="../../src/nugetPackageIcon.png" Pack="true" PackagePath="\" />
+		<None Include="../../LICENSE" Pack="true" PackagePath="\" />
+		<None Include="../../README.MD" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+	<!-- Nuget Packages -->
+	<ItemGroup>
+		<PackageReference Include="System.Text.Json" Version="10.0.2" />
+	</ItemGroup>
+
+</Project>
