@@ -1,0 +1,84 @@
+name: Build, Test, and Publish
+
+on:
+  workflow_dispatch: # Allow running the workflow manually from the GitHub UI
+  push:
+    tags:
+    - 'v*.*.*'
+
+jobs:
+  build:
+    name: Build, Test, and Publish
+
+    runs-on: windows-latest
+
+    permissions:
+      contents: read
+      id-token: write  # enable GitHub OIDC token issuance for this job
+      #packages: write
+
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Setup .NET 8.0
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore Dependencies
+      working-directory: ./src
+      run: dotnet restore
+
+    - name: Build
+      working-directory: ./src
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Test
+      working-directory: ./src
+      run: |
+        dotnet test --configuration Release --no-restore --no-build --verbosity normal
+
+    - name: Extract Version from Tag
+      id: tag
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const version = context.ref.replace('refs/tags/', '');
+          return version.slice(1);
+    - name: Print Results
+      run: echo ${{ steps.tag.outputs.result }}
+
+    - name: Change Package Version
+      working-directory: ./src
+      shell: pwsh
+      run: |
+        $old = "<Version>0.1.0</Version>"
+        $new = "<Version>" + ${{ steps.tag.outputs.result }} + "</Version>"
+
+        $projects = @('ApiClientKit')
+        
+        foreach ($project in $projects)
+        {
+            $filename = $project + "/" + $project + ".csproj"
+
+            Write-Host "Changing" $filename "to version" $new
+
+            $text = Get-Content $filename -Raw
+            $text = $text -replace $old, $new
+            $text | Set-Content $filename
+        }
+    
+    - name: Rebuild and Pack Project
+      run: |
+        dotnet pack src/ApiClientKit/ApiClientKit.csproj --configuration Release --output $GITHUB_WORKSPACE/out
+
+    - name: NuGet Login
+      uses: NuGet/login@v1
+      id: login
+      with:
+        user: 'olavodias'
+
+    - name: Push NuGet Packages
+      run: |
+        cd $GITHUB_WORKSPACE/out
+        dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols --api-key ${{ steps.login.outputs.NUGET_API_KEY }}
