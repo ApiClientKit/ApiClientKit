@@ -15,9 +15,9 @@ namespace ApiClientKit;
 /// <summary>
 /// Represents a Gateway that communicates with an API using the <see cref="HttpClient"/> component
 /// </summary>
-public sealed class HttpApiGateway: IApiGateway
+public sealed class HttpApiGateway: IApiGateway, IDisposable
 {
-    private readonly HttpClient _httpClient;
+    private readonly HttpClient? _httpClient;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HttpApiGateway"/> class
@@ -28,10 +28,23 @@ public sealed class HttpApiGateway: IApiGateway
         _httpClient = httpClient;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HttpApiGateway"/> class
+    /// </summary>
+    /// <param name="httpClientFactory">A function to create the Http Client</param>
+    public HttpApiGateway(Func<HttpClient> httpClientFactory)
+    {
+        _httpClient = httpClientFactory();
+    }
+
     /// <inheritdoc/>
     /// <exception cref="ApiException">Thrown if the API returned a unsuccesfull status</exception>
     public async Task<T?> SendAsync<T>(ApiRequest request, IApiDataSerializer serializer, IAuthProvider? authProvider, IApiLogger? logger, CancellationToken ct = default)
     {
+        // Validations
+        if (_httpClient is null)
+            throw new NullReferenceException("HTTP Client is not defined");
+
         // Build the Url for the request
         var url = BuildUrl(request.Path, request.Query);
 
@@ -83,5 +96,31 @@ public sealed class HttpApiGateway: IApiGateway
 
         var q = string.Join("&", query.Select(x => $"{x.Key}={Uri.EscapeDataString(x.Value)}"));
         return $"{path}?{q}";
+    }
+
+    // ==================================================
+    // IDisposable Implementation
+    // ==================================================
+    private bool disposedValue;
+
+    private void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                _httpClient?.Dispose();
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }
