@@ -85,7 +85,7 @@ public class HttpApiRequest: ApiRequest
             }
 
             // Adds the remaining of the query string
-            if (_queryString is not null)
+            if (!string.IsNullOrWhiteSpace(_queryString))
             {
                  if (_queryDictionary.Count > 0)
                     sbReturn.Append('&');
@@ -122,11 +122,34 @@ public class HttpApiRequest: ApiRequest
     /// <param name="method">The type of request</param>
     /// <param name="path">The path to do the request against</param>
     /// <param name="queryString">A query string to pass along the request</param>
-    public HttpApiRequest(HttpMethod method, string path, string queryString)
+    public HttpApiRequest(HttpMethod method, string path, string queryString) : this(method, path, queryString, QueryStringArrayStyles.Default) { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HttpApiRequest"/> class
+    /// </summary>
+    /// <param name="method">The type of request</param>
+    /// <param name="path">The path to do the request against</param>
+    /// <param name="arrayStyle">The formatting style for arrays</param>
+    public HttpApiRequest(HttpMethod method, string path, QueryStringArrayStyles arrayStyle)
+    {
+        Method = method;
+        Path = path;
+        ArrayStyle = arrayStyle;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HttpApiRequest"/> class
+    /// </summary>
+    /// <param name="method">The type of request</param>
+    /// <param name="path">The path to do the request against</param>
+    /// <param name="queryString">A query string to pass along the request</param>
+    /// <param name="arrayStyle">The formatting style for arrays</param>
+    public HttpApiRequest(HttpMethod method, string path, string queryString, QueryStringArrayStyles arrayStyle)
     {
         Method = method;
         Path = path;
         QueryString = queryString;
+        ArrayStyle = arrayStyle;
     }
 
     // ============================================================
