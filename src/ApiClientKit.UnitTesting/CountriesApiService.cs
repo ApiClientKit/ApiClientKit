@@ -22,7 +22,7 @@ namespace ApiClientKit.UnitTesting
 
         public async Task<Country[]?> GetCountriesAsync()
         {
-            var apiRequest = new ApiRequest(HttpMethod.Get, DEFAULT_PATH);
+            var apiRequest = new HttpApiRequest(HttpMethod.Get, DEFAULT_PATH);
             return await SendAsync<Country[]>(apiRequest);
         }
     }

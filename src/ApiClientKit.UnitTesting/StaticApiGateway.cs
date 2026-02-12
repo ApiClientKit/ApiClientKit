@@ -19,8 +19,11 @@ namespace ApiClientKit.UnitTesting
         
         public async Task<T?> SendAsync<T>(ApiRequest request, IApiDataSerializer serializer, IAuthProvider? authProvider, IApiLogger? logger, CancellationToken ct = default)
         {
+            if (request is not HttpApiRequest httpApiRequest)
+                throw new InvalidCastException($"Request is not of type {nameof(HttpApiRequest)}");
+                
             // If a GET request is done to the "countries" path, it will return the serialized list of countries
-            if (request.Method == HttpMethod.Get && string.Equals(request.Path, CountriesApiService.DEFAULT_PATH, StringComparison.OrdinalIgnoreCase))
+            if (httpApiRequest.Method == HttpMethod.Get && string.Equals(request.Path, CountriesApiService.DEFAULT_PATH, StringComparison.OrdinalIgnoreCase))
             {
                 var body = serializer.Serialize(Country.Countries);
                 await Task.Delay(1, ct);

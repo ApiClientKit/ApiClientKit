@@ -45,18 +45,21 @@ public sealed class HttpApiGateway: IApiGateway, IDisposable
         if (_httpClient is null)
             throw new NullReferenceException("HTTP Client is not defined");
 
+        if (request is not HttpApiRequest httpApiRequest)
+            throw new InvalidCastException($"Request is not of type \"{nameof(HttpApiRequest)}\"");
+
         // Build the Url for the request
-        var url = BuildUrl(request.Path, request.Query);
+        var url = $"{request.Path}{httpApiRequest.QueryString}";
 
         // Creates the message to be sent
-        var message = new HttpRequestMessage(request.Method, url);
+        var message = new HttpRequestMessage(httpApiRequest.Method, url);
 
         // Append Headers
-        foreach (var h in request.Headers)
+        foreach (var h in httpApiRequest.Headers)
             message.Headers.Add(h.Key, h.Value);
 
         // Append Body
-        if (request.Method != HttpMethod.Get && request.Body is not null)
+        if (httpApiRequest.Method != HttpMethod.Get && httpApiRequest.Body is not null)
         {
             var json = serializer.Serialize(request.Body);
             message.Content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -81,21 +84,6 @@ public sealed class HttpApiGateway: IApiGateway, IDisposable
             throw new ApiException("API call failed", (int)response.StatusCode, body);
 
         return string.IsNullOrWhiteSpace(body) ? default : serializer.Deserialize<T>(body);
-    }
-
-    /// <summary>
-    /// Builds the Url for the API call
-    /// </summary>
-    /// <param name="path">The path for the call</param>
-    /// <param name="query">The query string for the call</param>
-    /// <returns>A string containing the complete url</returns>
-    private static string BuildUrl(string path, Dictionary<string, string> query)
-    {
-        if (query == null || query.Count == 0)
-            return path;
-
-        var q = string.Join("&", query.Select(x => $"{x.Key}={Uri.EscapeDataString(x.Value)}"));
-        return $"{path}?{q}";
     }
 
     // ==================================================
