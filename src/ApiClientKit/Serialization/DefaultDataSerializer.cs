@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ApiClientKit.Serialization;
 
@@ -17,6 +18,15 @@ public sealed class DefaultDataSerializer: IApiDataSerializer
         PropertyNameCaseInsensitive = true,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DefaultDataSerializer"/> class
+    /// </summary>
+    public DefaultDataSerializer()
+    {
+        // Append converters for enumerations using the EnumMember attribute
+        _options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+    }
 
     /// <inheritdoc/>
     public string Serialize<T>(T obj) => JsonSerializer.Serialize(obj, _options);
