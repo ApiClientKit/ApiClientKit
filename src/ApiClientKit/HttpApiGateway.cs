@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace ApiClientKit;
 
+//TODO: Implement a retry policy for the API
 
 /// <summary>
 /// Represents a Gateway that communicates with an API using the <see cref="HttpClient"/> component
