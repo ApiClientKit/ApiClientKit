@@ -61,8 +61,15 @@ public sealed class HttpApiGateway: IApiGateway, IDisposable
         // Append Body
         if (httpApiRequest.Method != HttpMethod.Get && httpApiRequest.Body is not null)
         {
-            var json = serializer.Serialize(request.Body);
-            message.Content = new StringContent(json, Encoding.UTF8, "application/json");
+            if (request.Body is string stringBody)
+            {
+                message.Content = new StringContent(stringBody, Encoding.UTF8, "application/json");
+            }
+            else
+            {
+                var json = serializer.Serialize(request.Body);
+                message.Content = new StringContent(json, Encoding.UTF8, "application/json");
+            }
         }
 
         // Append Authentication Headers
