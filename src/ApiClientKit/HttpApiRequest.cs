@@ -159,8 +159,8 @@ public class HttpApiRequest: ApiRequest
     /// <summary>
     /// Appends a Query String Parameter
     /// </summary>
-    /// <param name="key"></param>
-    /// <param name="value"></param>
+    /// <param name="key">The query string parameter name</param>
+    /// <param name="value">The value of the parameter</param>
     public void AppendQueryStringParameter(string key, string value)
     {
         if (_queryDictionary.ContainsKey(key))
@@ -170,6 +170,78 @@ public class HttpApiRequest: ApiRequest
         }
 
         _queryDictionary.Add(key, new List<string>() { value });
+    }
+
+    /// <summary>
+    /// Appends a Query String Parameter
+    /// </summary>
+    /// <param name="key">The query string parameter name</param>
+    /// <param name="value">The value of the parameter</param>
+    public void AppendQueryStringParameter(string key, char value)
+    {
+        AppendQueryStringParameter(key, value.ToString());
+    }
+
+    /// <summary>
+    /// Appends a Query String Parameter
+    /// </summary>
+    /// <param name="key">The query string parameter name</param>
+    /// <param name="value">The value of the parameter</param>
+    public void AppendQueryStringParameter(string key, long value)
+    {
+        AppendQueryStringParameter(key, value.ToString());
+    }
+
+    /// <summary>
+    /// Appends a Query String Parameter
+    /// </summary>
+    /// <param name="key">The query string parameter name</param>
+    /// <param name="value">The value of the parameter</param>
+    public void AppendQueryStringParameter(string key, int value)
+    {
+        AppendQueryStringParameter(key, value.ToString());
+    }
+
+    /// <summary>
+    /// Appends a Query String Parameter
+    /// </summary>
+    /// <param name="key">The query string parameter name</param>
+    /// <param name="value">The value of the parameter</param>
+    public void AppendQueryStringParameter(string key, byte value)
+    {
+        AppendQueryStringParameter(key, value.ToString());
+    }
+
+    /// <summary>
+    /// Appends a Query String Parameter
+    /// </summary>
+    /// <param name="key">The query string parameter name</param>
+    /// <param name="dateTime">The value of the parameter</param>
+    public void AppendQueryStringParameter(string key, DateTime dateTime)
+    {
+        AppendQueryStringParameter(key, dateTime, "yyyy-MM-dd");
+    }
+
+    /// <summary>
+    /// Appends a Query String Parameter
+    /// </summary>
+    /// <param name="key">The query string parameter name</param>
+    /// <param name="dateTime">The value of the parameter</param>
+    /// <param name="dateFormat">The date/time format</param>
+    public void AppendQueryStringParameter(string key, DateTime dateTime, string dateFormat)
+    {
+        AppendQueryStringParameter(key, dateTime.ToString(dateFormat));
+    }
+
+    /// <summary>
+    /// Appends a Query String Parameter
+    /// </summary>
+    /// <param name="key">The query string parameter name</param>
+    /// <param name="valueFactory">The factory to create the parameter value</param>
+    /// <remarks>Use this constructor for field types that are not automatically available</remarks>
+    public void AppendQueryStringParameter(string key, Func<string> valueFactory)
+    {
+        AppendQueryStringParameter(key, valueFactory());
     }
 }
 
@@ -188,5 +260,4 @@ public enum QueryStringArrayStyles: byte
     /// </summary>
     /// <example>&amp;status=1,2,3</example>
     CommaSeparated = 1
-        
 }
