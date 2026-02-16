@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ApiClientKit;
+namespace ApiClientKit.Http;
 
 //TODO: Implement a retry policy for the API
 
@@ -40,7 +40,7 @@ public sealed class HttpApiGateway: IApiGateway, IDisposable
 
     /// <inheritdoc/>
     /// <exception cref="ApiException">Thrown if the API returned a unsuccesfull status</exception>
-    public async Task<T?> SendAsync<T>(ApiRequest request, IApiDataSerializer serializer, IAuthProvider? authProvider, IApiLogger? logger, CancellationToken ct = default)
+    public async Task<ApiResponse<T?>> SendAsync<T>(ApiRequest request, IApiDataSerializer serializer, IAuthProvider? authProvider, IApiLogger? logger, CancellationToken ct = default)
     {
         // Validations
         if (_httpClient is null)
@@ -81,9 +81,10 @@ public sealed class HttpApiGateway: IApiGateway, IDisposable
         logger?.LogRequest(message);
 
         // Sends the Request and awaits for results
+        //TODO: handle failures and retry policy
         var response = await _httpClient.SendAsync(message, ct);
         var body = await response.Content.ReadAsStringAsync();
-
+        
         // Logs Response
         logger?.LogResponse(response, body);
 
@@ -91,7 +92,8 @@ public sealed class HttpApiGateway: IApiGateway, IDisposable
         if (!response.IsSuccessStatusCode)
             throw new ApiException("API call failed", (int)response.StatusCode, body);
 
-        return string.IsNullOrWhiteSpace(body) ? default : serializer.Deserialize<T>(body);
+        // Returns an API Response
+        return new HttpApiResponse<T?>(response, string.IsNullOrWhiteSpace(body) ? default : serializer.Deserialize<T>(body));
     }
 
     // ==================================================

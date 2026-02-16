@@ -1,6 +1,6 @@
-﻿using ApiClientKit;
-using ApiClientKit.Authentication;
+﻿using ApiClientKit.Authentication;
 using ApiClientKit.Diagnostics;
+using ApiClientKit.Http;
 using ApiClientKit.Serialization;
 using ApiClientKit.UnitTesting.Models;
 using System;
@@ -15,7 +15,7 @@ namespace ApiClientKit.UnitTesting
     {
         public const string DEFAULT_PATH = "countries/europe";
 
-        public CountriesApiService(IApiGateway apiGateway, IApiDataSerializer serializer, IAuthProvider? authProvider, IApiLogger? apiLogger) : base(apiGateway, serializer, authProvider, apiLogger)
+        public CountriesApiService(IApiGateway apiGateway, IApiDataSerializer serializer) : base(apiGateway, serializer)
         {
 
         }
@@ -23,7 +23,8 @@ namespace ApiClientKit.UnitTesting
         public async Task<Country[]?> GetCountriesAsync()
         {
             var apiRequest = new HttpApiRequest(HttpMethod.Get, DEFAULT_PATH);
-            return await SendAsync<Country[]>(apiRequest);
+            var apiResponse = await SendAsync<Country[]>(apiRequest);
+            return apiResponse.Contents;
         }
     }
 }
