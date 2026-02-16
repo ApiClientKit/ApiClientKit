@@ -13,11 +13,7 @@ namespace ApiClientKit.Serialization;
 /// <remarks>This class uses the <see cref="System.Text.Json"/> serializer</remarks>
 public sealed class DefaultDataSerializer: IApiDataSerializer
 {
-    private readonly JsonSerializerOptions _options = new()
-    {
-        PropertyNameCaseInsensitive = true,
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-    };
+    private readonly JsonSerializerOptions _options;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultDataSerializer"/> class
@@ -25,6 +21,12 @@ public sealed class DefaultDataSerializer: IApiDataSerializer
     public DefaultDataSerializer()
     {
         // Append converters for enumerations using the EnumMember attribute
+        _options = new()
+        {
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        };
+
         _options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
     }
 

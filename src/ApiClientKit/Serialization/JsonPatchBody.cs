@@ -1,12 +1,11 @@
-﻿using ApiClientKit.Serialization;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ApiClientKit;
+namespace ApiClientKit.Serialization;
 
 /// <summary>
 /// Defines the structure for a JSON Patch document, as defined in <see href="https://datatracker.ietf.org/doc/html/rfc6902">RFC 6902</see>

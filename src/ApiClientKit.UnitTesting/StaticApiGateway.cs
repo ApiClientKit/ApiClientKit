@@ -1,6 +1,6 @@
-﻿using ApiClientKit;
-using ApiClientKit.Authentication;
+﻿using ApiClientKit.Authentication;
 using ApiClientKit.Diagnostics;
+using ApiClientKit.Http;
 using ApiClientKit.Serialization;
 using ApiClientKit.UnitTesting.Models;
 using System;
@@ -17,7 +17,7 @@ namespace ApiClientKit.UnitTesting
     internal class StaticApiGateway : IApiGateway
     {
         
-        public async Task<T?> SendAsync<T>(ApiRequest request, IApiDataSerializer serializer, IAuthProvider? authProvider, IApiLogger? logger, CancellationToken ct = default)
+        public async Task<ApiResponse<T?>> SendAsync<T>(ApiRequest request, IApiDataSerializer serializer, IAuthProvider? authProvider, IApiLogger? logger, CancellationToken ct = default)
         {
             if (request is not HttpApiRequest httpApiRequest)
                 throw new InvalidCastException($"Request is not of type {nameof(HttpApiRequest)}");
@@ -27,10 +27,10 @@ namespace ApiClientKit.UnitTesting
             {
                 var body = serializer.Serialize(Country.Countries);
                 await Task.Delay(1, ct);
-                return serializer.Deserialize<T>(body);
+                return new HttpApiResponse<T?>(System.Net.HttpStatusCode.OK, serializer.Deserialize<T>(body));
             }
 
-            return default;
+            return new HttpApiResponse<T?>(System.Net.HttpStatusCode.OK);
         }
     }
 }

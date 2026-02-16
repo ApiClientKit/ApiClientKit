@@ -1,5 +1,6 @@
 ﻿using ApiClientKit.Authentication;
 using ApiClientKit.Diagnostics;
+using ApiClientKit.Http;
 using ApiClientKit.Serialization;
 using System;
 using System.Collections.Generic;
@@ -26,5 +27,5 @@ public interface IApiGateway
     /// <param name="logger">Reference to the Api Logger</param>
     /// <param name="ct">The cancellation token</param>
     /// <returns>A task that sends a request to the Api</returns>
-    Task<T?> SendAsync<T>(ApiRequest request, IApiDataSerializer serializer, IAuthProvider? authProvider, IApiLogger? logger, CancellationToken ct = default);
+    Task<ApiResponse<T?>> SendAsync<T>(ApiRequest request, IApiDataSerializer serializer, IAuthProvider? authProvider, IApiLogger? logger, CancellationToken ct = default);
 }

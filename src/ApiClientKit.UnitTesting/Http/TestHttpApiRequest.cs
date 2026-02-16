@@ -1,10 +1,11 @@
-﻿using System;
+﻿using ApiClientKit.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApiClientKit.UnitTesting
+namespace ApiClientKit.UnitTesting.Http
 {
     [TestClass]
     public class TestHttpApiRequest

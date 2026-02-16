@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 
-namespace ApiClientKit;
+namespace ApiClientKit.Http;
 
 /// <summary>
 /// Defines an API Request done via HTTP/S

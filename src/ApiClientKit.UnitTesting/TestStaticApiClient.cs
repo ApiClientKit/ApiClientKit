@@ -12,7 +12,7 @@ namespace ApiClientKit.UnitTesting
         public void TestStaticAPI()
         {
             // Create Static Api Service
-            var service = new CountriesApiService(new StaticApiGateway(), new DefaultDataSerializer(), null, null);
+            var service = new CountriesApiService(new StaticApiGateway(), new DefaultDataSerializer());
             var countries = service.GetCountriesAsync().GetAwaiter().GetResult();
 
             // Validations
