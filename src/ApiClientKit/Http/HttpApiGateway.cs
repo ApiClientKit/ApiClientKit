@@ -82,18 +82,26 @@ public sealed class HttpApiGateway: IApiGateway, IDisposable
 
         // Sends the Request and awaits for results
         //TODO: handle failures and retry policy
-        var response = await _httpClient.SendAsync(message, ct);
-        var body = await response.Content.ReadAsStringAsync();
-        
-        // Logs Response
-        logger?.LogResponse(response, body);
+        HttpResponseMessage? response = null;
 
-        // Throws API exception if failure happens
-        if (!response.IsSuccessStatusCode)
-            throw new ApiException("API call failed", (int)response.StatusCode, body);
+        try
+        {
+            response = await _httpClient.SendAsync(message, ct);
+            var body = await response.Content.ReadAsStringAsync();
 
-        // Returns an API Response
-        return new HttpApiResponse<T?>(response, string.IsNullOrWhiteSpace(body) ? default : serializer.Deserialize<T>(body));
+            // Logs Response
+            logger?.LogResponse(response, body);
+
+            // Returns an API Response
+            return new HttpApiResponse<T?>(response, string.IsNullOrWhiteSpace(body) ? default : serializer.Deserialize<T>(body));
+        }
+        catch (Exception e)
+        {
+            return new HttpApiResponse<T?>(e)
+            {  
+                OriginalMessage = response
+            };
+        }
     }
 
     // ==================================================

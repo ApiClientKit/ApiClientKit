@@ -27,10 +27,12 @@ namespace ApiClientKit.UnitTesting
             {
                 var body = serializer.Serialize(Country.Countries);
                 await Task.Delay(1, ct);
-                return new HttpApiResponse<T?>(System.Net.HttpStatusCode.OK, serializer.Deserialize<T>(body));
+                return new HttpApiResponse<T?>(serializer.Deserialize<T>(body));
             }
-
-            return new HttpApiResponse<T?>(System.Net.HttpStatusCode.OK);
+            else
+            {
+                throw new InvalidOperationException();
+            }
         }
     }
 }

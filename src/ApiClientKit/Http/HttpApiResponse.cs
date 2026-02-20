@@ -15,7 +15,13 @@ public sealed class HttpApiResponse<T>: ApiResponse<T>
     /// <summary>
     /// The Response Status Code
     /// </summary>
-    public HttpStatusCode StatusCode { get; set; }
+    public HttpStatusCode? StatusCode 
+    { 
+        get
+        {
+            return OriginalMessage?.StatusCode;
+        }
+    }
 
     /// <summary>
     /// The origin of the <see cref="ApiResponse"/>
@@ -25,23 +31,12 @@ public sealed class HttpApiResponse<T>: ApiResponse<T>
     /// <summary>
     /// Initializes a new instance of the <see cref="HttpApiResponse{T}"/> class
     /// </summary>
-    /// <param name="statusCode">The response status code</param>
-    /// <remarks>This constructor assumes the execution was succesful (no exceptions where thrown).</remarks>
-    public HttpApiResponse(HttpStatusCode statusCode)
-    {
-        StatusCode = statusCode;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="HttpApiResponse{T}"/> class
-    /// </summary>
-    /// <param name="statusCode">The response status code</param>
     /// <param name="contents">The deserialized contents of the response</param>
     /// <remarks>This constructor assumes the execution was succesful (no exceptions where thrown).</remarks>
-    public HttpApiResponse(HttpStatusCode statusCode, T? contents)
+    public HttpApiResponse(T? contents)
     {
-        StatusCode = statusCode;
         Contents = contents;
+        IsExecutionSuccesful = true;
     }
 
     /// <summary>
@@ -54,8 +49,6 @@ public sealed class HttpApiResponse<T>: ApiResponse<T>
     {
         OriginalMessage = originalMessage;
         Contents = contents;
-
-        StatusCode = originalMessage.StatusCode;
         IsExecutionSuccesful = true;
     }
 
